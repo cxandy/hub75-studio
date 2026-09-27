@@ -42,9 +42,6 @@ api:
 wifi:
   power_save_mode: none
   ap:
-  on_connect:
-    - delay: 5s  # Gives time for improv results to be transmitted
-    - ble.disable:
 
 captive_portal:
 
@@ -57,10 +54,16 @@ dashboard_import:
   package_import_url: github://cxandy/hub75-studio/esp32-classic.yaml@main
   import_full_config: true
 
-# Sets up Bluetooth LE (Only on ESP32) to allow the user
-# to provision wifi credentials to the device.
-esp32_improv:
-  authorizer: none
+# NOTE: NO esp32_improv (BLE) here on purpose.
+# The classic ESP32 has no PSRAM, and the Bluetooth controller needs ~50-60KB of
+# contiguous internal RAM. Combined with the HUB75 DMA buffers (32KB frame
+# buffer + ~25KB descriptor chain per array) the heap runs out, and enabling
+# BLE crashes with:
+#     [esp32_ble:567]: Enabling
+#     Guru Meditation Error: Core 0 panic'ed (LoadProhibited) EXCVADDR: 0x00000000
+# which turns into a boot loop -> safe mode.
+# Wi-Fi provisioning is still available two ways: improv_serial below, and the
+# captive portal at http://192.168.4.1 once joined to the AP.
 
 # Sets up the improv via serial client for Wi-Fi provisioning.
 # Handy if your device has a usb port for the user to add credentials when they first get it.

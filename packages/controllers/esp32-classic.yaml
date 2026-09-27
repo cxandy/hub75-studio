@@ -67,7 +67,10 @@ display:
 
     clock_phase: false
     latch_blanking: 1
-    clock_speed: 20MHz
+    # 20MHz is what the ESP32-S3 (parlio) path uses, but the classic ESP32's I2S
+    # peripheral maxes out at 10MHz and the driver silently halves it anyway.
+    # Ask for 10MHz directly so the timing constants match the real clock.
+    clock_speed: 10MHz
 
     bit_depth: 8
 
