@@ -4,6 +4,8 @@
 .pio/
 .pioenvs/
 .esphome/
+# Locally built firmware images (see esp32-classic.factory.yaml)
+/firmware/
 .venv/
 venv/
 __pycache__/
