@@ -13,7 +13,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        file: [apollo-automation-m1-rev4, apollo-automation-m1-rev6, adafruit-matrix-portal-s3]
+        file: [apollo-automation-m1-rev4, apollo-automation-m1-rev6, adafruit-matrix-portal-s3, esp32-trinity]
     uses: esphome/workflows/.github/workflows/build.yml@0fdd5e311b7e744069166696072a1a9cbc5fbeb6 # 2026.8.1
     with:
       #### Modify below here to match your project ####

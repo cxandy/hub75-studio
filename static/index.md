@@ -17,6 +17,9 @@ You can use the button below to install the pre-built firmware directly to your 
 <li>
     <label><input type="radio" name="type" value="adafruit-matrix-portal-s3" data-manifest="adafruit-matrix-portal-s3.manifest.json" /> Adafruit Matrix Portal S3</label>
 </li>
+<li>
+    <label><input type="radio" name="type" value="esp32-trinity" data-manifest="esp32-trinity.manifest.json" /> ESP32 Trinity (classic ESP32 &mdash; 4MB flash, no PSRAM, fewer pages)</label>
+</li>
 </ul>
 
 <esp-web-install-button manifest="firmware/apollo-automation-m1-rev4.manifest.json"></esp-web-install-button>

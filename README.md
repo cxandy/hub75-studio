@@ -6,7 +6,7 @@
 
 **Transform your HUB75 LED matrix into a smart display for Home Assistant.**
 
-Flash ready‑to‑use firmware to your Apollo Automation M‑1 or Adafruit Matrix Portal S3, then enjoy a rich collection of Home Assistant–integrated applications:
+Flash ready‑to‑use firmware to your Apollo Automation M‑1, Adafruit Matrix Portal S3, or ESP32 Trinity, then enjoy a rich collection of Home Assistant–integrated applications:
 
 Now Playing with album art, Team Tracker for live sports scores, Clock & Weather Dashboard, real‑time Audio Spectrum Visualizer, Visual Effects (fireworks, fireplace, aurora), interactive Pong, MSR‑2 Radar, Countdown Timers, QR codes, and more.
 
@@ -27,7 +27,13 @@ Built on **ESPHome** with **LVGL** for smooth graphics, everything integrates se
 | **Apollo M‑1 rev4** | `apollo-automation-m1-rev4.factory.yaml` | ESP32‑S3 | None | ❌ | ❌ |
 | **Apollo M‑1 rev6** | `apollo-automation-m1-rev6.factory.yaml` | ESP32‑S3 | 8MB (octal) | ✅ | ❌ |
 | **Adafruit Matrix Portal S3** | `adafruit-matrix-portal-s3.factory.yaml` | ESP32‑S3 | 2MB (quad) | ❌ | ✅ |
+| **ESP32 Trinity** | `esp32-trinity.factory.yaml` | ESP32 | None | ❌ | ❌ |
 | **Huidu HD‑WF2** | Coming soon | ESP32‑S3 | None | ❌ | ❌ |
+
+> **ESP32 Trinity (classic ESP32)**: the original ESP32 has no PSRAM and usually just
+> 4MB of flash, so its firmware ships a reduced page set (BIOS, Clock, Clock
+> Dashboard, Visual Effects, Pong, QR Code) and uses ESPHome OTA only. For the full
+> feature set, use an ESP32‑S3 controller — or an ESP32 with PSRAM.
 
 **HUB75 LED Panels:**
 - Optimized for 64×64 pixel panels

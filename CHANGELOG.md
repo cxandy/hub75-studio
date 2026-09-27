@@ -7,6 +7,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v0.2.0
 
 ## [Unreleased]
 
+### Added
+- ESP32 Trinity (classic ESP32 / ESP32-WROOM-32) target: `esp32-trinity.yaml` and `esp32-trinity.factory.yaml`, wired into CI, the release build matrix and the web installer. The classic ESP32 has no PSRAM and 4MB of flash, so its firmware ships a reduced page set (BIOS, Clock, Clock Dashboard, Visual Effects, Pong, QR Code) and uses ESPHome OTA only
+
 ### Changed
 - Bumped lvgl-canvas-fx to v0.4.1 (fixes ESPHome 2026.7 code-generation failure on the chipmunk2d library spec)
 

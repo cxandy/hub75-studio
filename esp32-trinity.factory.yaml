@@ -1,0 +1,130 @@
+# ESP32 Trinity (classic ESP32 / ESP32-WROOM-32) factory config
+#
+# The classic ESP32 has no PSRAM and (usually) only 4MB of flash, so this config
+# is deliberately lean compared to the S3 factory files:
+#   * no `ota: http_request` (a 4MB partition table leaves ~1.9MB per app slot)
+#     -> ESPHome OTA only
+#   * no `packages/common/ddp.yaml` and therefore no DDP pages
+#     (ddp-receiver / ddp-stream / now-playing / teamtracker each need a full
+#     frame buffer in internal RAM)
+#   * no mic / accelerometer pages (audio-spectrum, msr-2-radar are M-1 only)
+#   * no WizMote/BLE proxy (each BLE proxy slot costs internal RAM)
+#   * single 64x64 panel: LVGL `buffer_size: 100%` = 8KB of the ~300KB heap
+substitutions:
+  name: "hub75-trinity"
+  friendly_name: "ESP32 Trinity"
+
+  # ===== Display / Panel =====
+  display_panel_width: 64
+  display_panel_height: 64
+  display_layout: HORIZONTAL
+  display_layout_rows: 1
+  display_layout_cols: 1
+  display_scan_wiring: STANDARD_TWO_SCAN
+
+  DISPLAY_W: ${display_panel_width * display_layout_cols}
+  DISPLAY_H: ${display_panel_height * display_layout_rows}
+
+esphome:
+  name: "${name}"
+  friendly_name: "${friendly_name}"
+  name_add_mac_suffix: true
+  project:
+    name: cxandy.hub75-studio # this fork publishes its own firmware for this target
+    version: dev # This will be replaced by the github workflows with the `release` version
+
+logger:
+
+api:
+
+wifi:
+  power_save_mode: none
+  ap:
+  on_connect:
+    - delay: 5s  # Gives time for improv results to be transmitted
+    - ble.disable:
+
+captive_portal:
+
+# This should point to the public location of the yaml file that will be adopted.
+# In this case it is the core yaml file that does not contain the extra things
+# that are provided by this factory yaml file as the user does not need these once adopted.
+# NOTE: must point at a branch that contains esp32-trinity.yaml, otherwise
+#       adoption after flashing will 404.
+dashboard_import:
+  package_import_url: github://cxandy/hub75-studio/esp32-trinity.yaml@main
+  import_full_config: true
+
+# Sets up Bluetooth LE (Only on ESP32) to allow the user
+# to provision wifi credentials to the device.
+esp32_improv:
+  authorizer: none
+
+# Sets up the improv via serial client for Wi-Fi provisioning.
+# Handy if your device has a usb port for the user to add credentials when they first get it.
+improv_serial:
+
+ota:
+  - platform: esphome
+
+packages:
+  # Sets minimum supported ESPHome version
+  esphome_version: !include packages/common/esphome-version.yaml
+
+  # Base board/pins, LVGL root, services, etc.
+  controller: !include
+    file: packages/controllers/esp32-trinity.yaml
+    vars:
+      panel_width: ${display_panel_width}
+      panel_height: ${display_panel_height}
+      layout: ${display_layout}
+      layout_rows: ${display_layout_rows}
+      layout_cols: ${display_layout_cols}
+      scan_wiring: ${display_scan_wiring}
+
+  # Shared helpers, sensors, buttons
+  utils: !include packages/common/utils.yaml
+
+  # Shared fonts and LVGL styles
+  theme: !include packages/common/theme.yaml
+
+  # Basic Boot Screen to avoid flashing or things not being ready yet
+  bios: !include packages/pages/bios.yaml
+
+  # Simple clock page
+  clock: !include
+    file: packages/pages/clock.yaml
+    vars:
+      page_friendly_name: "Clock"
+
+  # Clock weather / dashboard
+  clock_dashboard: !include
+    file: packages/pages/clock-dashboard.yaml
+    vars:
+      page_friendly_name: "Clock Dashboard"
+      weather_entity: "weather.home"
+      alarm_entity: "alarm_control_panel.example_alarm"
+      person_a: "person.person_a"
+      person_b: "person.person_b"
+      person_a_icon: "\U000F040A"
+      person_b_icon: "\U000F0B8F"
+
+  # Page that uses lvgl-canvas-fx to render various effects (and change which in HA)
+  fx: !include
+    file: packages/pages/fx.yaml
+    vars:
+      page_friendly_name: "Visual Effects"
+
+  # A classic
+  pong: !include
+    file: packages/pages/pong.yaml
+    vars:
+      page_friendly_name: "Pong"
+
+  # QR Code page
+  qr: !include
+    file: packages/pages/qr.yaml
+    vars:
+      uid: "hub"
+      page_friendly_name: "QR Code"
+      qr_code_text: "https://esphome.io/"
